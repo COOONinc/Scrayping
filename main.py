@@ -99,6 +99,9 @@ class Scrayping:
         gc = gspread.authorize(credentials)
 
         # 「キー」でワークブックを取得
+        # https://docs.google.com/spreadsheets/d/{{SPREADSHEET_KEY}}/edit?usp=sharing
+        # ※必ず、共有からリンクを知っている人は閲覧可能に変更しておくこと
+        # ※GCPのサービスアカウントを編集者に追加しておく
         SPREADSHEET_KEY = '1GstVwQAGFUo2p5GoXHpQXeufYmctD7zEfLKGw-oG8r4'
         wb = gc.open_by_key(SPREADSHEET_KEY)
         ws = wb.sheet1  # 一番左の「シート1」を取得
