@@ -30,9 +30,11 @@ class Scrayping:
     def act(self,url):
         self.driver.get(url)
 
+        # 企業リスト全件取得
         tableElem =self.driver.find_element_by_xpath('//*[@id="main"]/div[2]/table/tbody/tr[3]/td/table/tbody')
         trs = tableElem.find_elements(By.TAG_NAME, "tr")
 
+        # 企業情報格納リスト
         Name = []
         Website = []
         Email = []
@@ -41,10 +43,14 @@ class Scrayping:
 
         for num in range(2,len(trs)+1):
             self.driver.get(url)
-            self.driver.find_element_by_xpath(f'//*[@id="main"]/div[2]/table/tbody/tr[3]/td/table/tbody/tr[{num}]/td[1]/a').click()
-            handle_array = self.driver.window_handles
 
-            self.driver.switch_to.window(handle_array[num-1])
+            # 各企業のURL遷移
+            self.driver.find_element_by_xpath(f'//*[@id="main"]/div[2]/table/tbody/tr[3]/td/table/tbody/tr[{num}]/td[1]/a').click()
+
+            # 別タブ遷移型なのでwindowを変更
+            handle_array = self.driver.window_handles # 遷移したタブを配列に格納
+
+            self.driver.switch_to.window(handle_array[num-1]) #末尾に追加されていくので-1の値を取得
             sleep(5)
 
             page_source = self.driver.page_source
@@ -56,6 +62,7 @@ class Scrayping:
             phone = soup.select_one('div#exhibitor_details_phone a')
             address = soup.select_one('div#exhibitor_details_address p')
 
+            # 値が入っていない企業には空文字をセットする
             if(name is not None):
                 Name.append(name.text)
             else:
@@ -76,6 +83,8 @@ class Scrayping:
                 Address.append(address.text)
             else:
                 Address.append('')
+ 
+            print(f'現在:{num}社目 / 残り{89-num}社')
 
         # --- ここからスクレイピング結果を出力するコード ---
 
@@ -90,7 +99,7 @@ class Scrayping:
         gc = gspread.authorize(credentials)
 
         # 「キー」でワークブックを取得
-        SPREADSHEET_KEY = '1lOQ3sp5kYQY9VZoH07d5ff60QIPEj1SelVnjrPbbKoc'
+        SPREADSHEET_KEY = '1GstVwQAGFUo2p5GoXHpQXeufYmctD7zEfLKGw-oG8r4'
         wb = gc.open_by_key(SPREADSHEET_KEY)
         ws = wb.sheet1  # 一番左の「シート1」を取得
  
@@ -100,15 +109,22 @@ class Scrayping:
         ws.update_cell(1, 3, 'E-mail')     # C1
         ws.update_cell(1, 4, '電話番号')  # D1
         ws.update_cell(1, 5, '住所')  # E1
+        sleep(5)
+
+        print('ok')
 
 
-        # A2からD6まで順に出力
+        # A2からE89まで順に出力
         for i in range(1,len(Name)):
+            print(f'{i}番目スタート')
             ws.update_cell(i+1, 1, Name[i-1])   # A列（name）
             ws.update_cell(i+1, 2, Website[i-1])     # B列（websiteURL）
             ws.update_cell(i+1, 3, Email[i-1])     # C列（email）
             ws.update_cell(i+1, 4, Phone[i-1])  # D列（phone）
             ws.update_cell(i+1, 5, Address[i-1])  # E列（address）
+
+            # スプレッドシートの書き込みは1件/sなので一旦スリープさせる
+            sleep(10)
 
         # 処理が終わったらwindowを閉じる
         self.driver.close()
