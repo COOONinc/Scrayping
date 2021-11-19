@@ -11,6 +11,13 @@
 
 <h4 align = "justify"> This repository gives to enough knowledge about python web scrayping !!! </h4>
 
+# What is scraping?
+> Web scraping is a computer software technique for extracting information from websites.
+
+
+![gif](https://user-images.githubusercontent.com/63713624/142664151-3e8cb392-5996-4814-97d9-47c8507291ff.gif)
+
+
 # Installation tools
 
 
