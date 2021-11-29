@@ -42,24 +42,17 @@
     git clone https://github.com/COOONinc/Scrayping.git
     ```
 3. Install Library
+
+    Install the necessary libraries.
     ```
-    pip install selenium
-    ```
-    ```
-    pip install beautifulsoup4
+    pip install -r requirements.txt
     ```
     [chromedriver-binary](https://pypi.org/project/chromedriver-binary/)
-    ```
-    pip install chromedriver-binary
-    ```
+    
     [gspread](https://docs.gspread.org/en/latest/)
-    ```
-    pip install gspread
-    ```
+    
     [googleapis/oauth2client](https://github.com/googleapis/oauth2client)
-    ```
-    pip install --upgrade oauth2client
-    ```
+    
 4. create your serviceAccount.json
 
    `credentials = ServiceAccountCredentials.from_json_keyfile_name('serviceAccount.json', scope)`
